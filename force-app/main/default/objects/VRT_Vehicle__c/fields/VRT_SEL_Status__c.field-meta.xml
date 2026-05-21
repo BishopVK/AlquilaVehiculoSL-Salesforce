@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VRT_SEL_Status__c</fullName>
+    <description>Indica si el vehículo está listo para el alquiler o requiere mantenimiento.</description>
+    <label>Estado</label>
+    <required>true</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Listo</fullName>
+                <default>false</default>
+                <label>Listo</label>
+            </value>
+            <value>
+                <fullName>En mantenimiento</fullName>
+                <default>false</default>
+                <label>En mantenimiento</label>
+            </value>
+            <value>
+                <fullName>Fuera de servicio</fullName>
+                <default>false</default>
+                <label>Fuera de servicio</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

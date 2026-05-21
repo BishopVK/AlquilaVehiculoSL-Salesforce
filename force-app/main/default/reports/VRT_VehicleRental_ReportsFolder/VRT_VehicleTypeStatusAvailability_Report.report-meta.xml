@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>VRT_Vehicle__c$Name</field>
+    </columns>
+    <columns>
+        <field>VRT_Vehicle__c.Alquileres__r$Name</field>
+    </columns>
+    <description>Informe con tabla resumen, que indica los vehículos clasificados por categoría y disponibilidad según su estado.</description>
+    <format>Tabular</format>
+    <name>VRT Vehículo TipoEstadoDisponible Report</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>VRT_Veh_culo_Report_Type__c</reportType>
+    <scope>user</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>VRT_Vehicle__c$VRT_DAT_ManufacturedYear__c</dateColumn>
+        <interval>INTERVAL_CURRENT</interval>
+    </timeFrameFilter>
+</Report>
