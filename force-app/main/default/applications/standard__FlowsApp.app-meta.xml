@@ -15,6 +15,8 @@
     <tabs>standard-FlowLogs</tabs>
     <tabs>VRT_Rental__c</tabs>
     <tabs>VRT_Vehicle__c</tabs>
+    <tabs>standard-GlobalFlowResources</tabs>
+    <tabs>VRT_Fee__c</tabs>
     <uiType>Lightning</uiType>
     <utilityBar>FlowsApp_UtilityBar</utilityBar>
 </CustomApplication>

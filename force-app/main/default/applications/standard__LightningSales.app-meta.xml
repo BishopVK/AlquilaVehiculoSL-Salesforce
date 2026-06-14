@@ -28,6 +28,7 @@
     <tabs>standard-Forecasting3</tabs>
     <tabs>VRT_Rental__c</tabs>
     <tabs>VRT_Vehicle__c</tabs>
+    <tabs>VRT_Fee__c</tabs>
     <uiType>Lightning</uiType>
     <utilityBar>LightningSales_UtilityBar</utilityBar>
 </CustomApplication>

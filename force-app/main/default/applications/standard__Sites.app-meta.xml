@@ -8,4 +8,5 @@
     <tabs>standard-Chatter</tabs>
     <tabs>VRT_Rental__c</tabs>
     <tabs>VRT_Vehicle__c</tabs>
+    <tabs>VRT_Fee__c</tabs>
 </CustomApplication>

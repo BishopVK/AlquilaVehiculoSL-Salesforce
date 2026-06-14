@@ -64,7 +64,7 @@
     </actionOverrides>
     <brand>
         <headerColor>#FA8909</headerColor>
-        <logo>alquilavehiculo_128px1</logo>
+        <logo>alquilavehiculo_128px2</logo>
         <logoVersion>1</logoVersion>
         <shouldOverrideOrgTheme>false</shouldOverrideOrgTheme>
     </brand>
@@ -82,6 +82,7 @@
     <tabs>standard-Contact</tabs>
     <tabs>VRT_Rental__c</tabs>
     <tabs>VRT_Vehicle__c</tabs>
+    <tabs>VRT_Fee__c</tabs>
     <tabs>standard-report</tabs>
     <tabs>standard-Dashboard</tabs>
     <uiType>Lightning</uiType>

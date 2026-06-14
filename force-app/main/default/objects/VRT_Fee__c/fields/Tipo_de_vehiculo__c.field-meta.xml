@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Tipo_de_vehiculo__c</fullName>
+    <description>Tipo de vehículo que se aplica a la tarifa</description>
+    <label>Tipo de vehículo</label>
+    <required>true</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetName>Tipo_de_vehiculo</valueSetName>
+    </valueSet>
+</CustomField>

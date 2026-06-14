@@ -142,38 +142,27 @@
     </actionOverrides>
     <allowInChatterGroups>false</allowInChatterGroups>
     <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
-    <deploymentStatus>Deployed</deploymentStatus>
-    <description>Medio de transporte a alquilar.</description>
+    <deploymentStatus>InDevelopment</deploymentStatus>
+    <description>Tarifas aplicables a los alquileres según tipo de vehículo, temporada y precio por día</description>
     <enableActivities>true</enableActivities>
     <enableBulkApi>true</enableBulkApi>
     <enableFeeds>false</enableFeeds>
-    <enableHistory>false</enableHistory>
+    <enableHistory>true</enableHistory>
     <enableLicensing>false</enableLicensing>
     <enableReports>true</enableReports>
     <enableSearch>true</enableSearch>
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
     <externalSharingModel>Private</externalSharingModel>
-    <gender>Masculine</gender>
-    <label>Vehículo</label>
+    <gender>Feminine</gender>
+    <label>Tarifa</label>
     <nameField>
-        <displayFormat>{00000000}</displayFormat>
-        <label>Vehículo Number</label>
-        <type>AutoNumber</type>
+        <label>Tarifa Name</label>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
     </nameField>
-    <pluralLabel>Vehículos</pluralLabel>
-    <profileSearchLayouts>
-        <fields>NAME</fields>
-        <fields>VRT_SEL_VehicleType__c</fields>
-        <fields>VRT_TXT_Brand__c</fields>
-        <fields>VRT_TXT_Model__c</fields>
-        <profileName>System Administrator</profileName>
-    </profileSearchLayouts>
-    <searchLayouts>
-        <searchResultsAdditionalFields>VRT_SEL_VehicleType__c</searchResultsAdditionalFields>
-        <searchResultsAdditionalFields>VRT_TXT_Brand__c</searchResultsAdditionalFields>
-        <searchResultsAdditionalFields>VRT_TXT_Model__c</searchResultsAdditionalFields>
-    </searchLayouts>
+    <pluralLabel>Tarifas</pluralLabel>
+    <searchLayouts></searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
     <visibility>Public</visibility>
 </CustomObject>

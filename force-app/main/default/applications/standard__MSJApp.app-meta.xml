@@ -12,8 +12,12 @@
     <tabs>standard-JourneyMap</tabs>
     <tabs>VRT_Rental__c</tabs>
     <tabs>VRT_Vehicle__c</tabs>
+    <tabs>VRT_Fee__c</tabs>
     <uiType>Lightning</uiType>
     <workspaceConfig>
+        <mappings>
+            <tab>VRT_Fee__c</tab>
+        </mappings>
         <mappings>
             <tab>VRT_Rental__c</tab>
         </mappings>
