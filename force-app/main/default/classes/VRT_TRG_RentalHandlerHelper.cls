@@ -101,4 +101,77 @@ public class VRT_TRG_RentalHandlerHelper {
         // 5. Update masivo (1 DML)
         update vehicles;
     }
+
+    // Calculate the total rental amount before inserting or updating the rental record
+    public static void calculatePricing(List<VRT_Rental__c> rentals) {
+        Set<Id> vehicleIds = new Set<Id>();
+        Set<Id> accountIds = new Set<Id>();
+        
+        for (VRT_Rental__c r : rentals) {
+            vehicleIds.add(r.VRT_LKP_Vehicle__c);
+            accountIds.add(r.VRT_LKP_Account__c);
+        }
+        
+        // 1. Obtener Vehículos (para saber su tipo)
+        Map<Id, VRT_Vehicle__c> vehiclesMap = new Map<Id, VRT_Vehicle__c>(
+            [SELECT Id, VRT_SEL_VehicleType__c FROM VRT_Vehicle__c WHERE Id IN :vehicleIds]
+        );
+
+        // 2. Obtener Historial de Fidelidad (Cuentas con >= 3 alquileres en 365 días)
+        Set<Id> loyalAccounts = new Set<Id>();
+        for (AggregateResult ar : [SELECT VRT_LKP_Account__c accId FROM VRT_Rental__c 
+                                   WHERE VRT_LKP_Account__c IN :accountIds 
+                                   AND VRT_DAT_InitialDate__c = LAST_N_DAYS:365 
+                                   GROUP BY VRT_LKP_Account__c HAVING COUNT(Id) >= 3]) {
+            loyalAccounts.add((Id)ar.get('accId'));
+        }
+
+        // 3. Obtener todas las Tarifas en un Mapa para acceso rápido
+        Map<String, Decimal> feeMap = new Map<String, Decimal>();
+        for (VRT_Fee__c fee : [SELECT Tipo_de_vehiculo__c, Temporada__c, Precio_por_dia__c
+                                FROM VRT_Fee__c]) {
+            feeMap.put(fee.Tipo_de_vehiculo__c + '-' + fee.Temporada__c, fee.Precio_por_dia__c);
+        }
+
+        // 4. Lógica de cálculo
+        for (VRT_Rental__c r : rentals) {
+            String season = getTemporada(r.VRT_DAT_InitialDate__c);
+            String vehicleType = vehiclesMap.get(r.VRT_LKP_Vehicle__c)?.VRT_SEL_VehicleType__c;
+            Decimal dailyRate = feeMap.get(vehicleType + '-' + season);
+
+            if (dailyRate == null) {
+                r.addError('No existe tarifa configurada para el tipo ' + vehicleType + ' en temporada ' + season);
+                continue;
+            }
+
+            Integer days = r.VRT_DAT_InitialDate__c.daysBetween(r.VRT_DAT_FinalDate__c);
+            Decimal total = dailyRate * days;
+            String info = 'Base: ' + total + '€. ';
+
+            // Aplicar fidelidad
+            if (loyalAccounts.contains(r.VRT_LKP_Account__c)) {
+                total *= 0.95;
+                info += 'Descuento 5% aplicado. ';
+            }
+
+            // Aplicar penalización por retraso (VRT_DAT_ReturnDate__c)
+            if (r.VRT_DAT_ReturnDate__c != null && r.VRT_DAT_ReturnDate__c > r.VRT_DAT_FinalDate__c) {
+                Integer lateDays = r.VRT_DAT_FinalDate__c.daysBetween(r.VRT_DAT_ReturnDate__c);
+                Decimal penalty = (dailyRate * 1.25) * lateDays; // 25% extra sobre tarifa
+                total += penalty;
+                r.VRT_CHK_Penalty__c = true;
+                info += 'Penalización 25% por ' + lateDays + ' días extra.';
+            }
+
+            r.VRT_DIV_TotalCost__c = total;
+            r.VRT_TXT_Cost_Info__c = info;
+        }
+    }
+
+    private static String getTemporada(Date d) {
+        Integer month = d.month();
+        if (month == 1 || month == 4 || month == 7 || month == 8 || month == 12) return 'Alta';
+        if (month == 2 || month == 5 || month == 6 || month == 9) return 'Media';
+        return 'Baja';
+    }
 }
