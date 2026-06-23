@@ -271,4 +271,86 @@ public class VRT_TRG_Rental_Test {
             System.assertEquals(600, finalMileage);
         }
     }
+
+    @isTest
+    static void testPricingCalculation() {
+        Account acc = [SELECT Id FROM Account LIMIT 1];
+        VRT_Vehicle__c veh = [SELECT Id FROM VRT_Vehicle__c LIMIT 1];
+
+        Test.startTest();
+        // Caso 1: Cálculo estándar
+        VRT_Rental__c rental = new VRT_Rental__c(
+            VRT_LKP_Account__c = acc.Id,
+            VRT_LKP_Vehicle__c = veh.Id,
+            VRT_DAT_InitialDate__c = Date.today().addDays(1), // Mes actual (ajusta según tu getTemporada)
+            VRT_DAT_FinalDate__c = Date.today().addDays(5)
+        );
+        insert rental;
+        Test.stopTest();
+
+        VRT_Rental__c result = [SELECT VRT_DIV_TotalCost__c FROM VRT_Rental__c WHERE Id = :rental.Id];
+        System.assertNotEquals(null, result.VRT_DIV_TotalCost__c, 'El coste debería haberse calculado');
+    }
+
+    @isTest
+    static void testLoyaltyAndPenalty() {
+        Account acc = [SELECT Id FROM Account LIMIT 1];
+        VRT_Vehicle__c veh = [SELECT Id FROM VRT_Vehicle__c LIMIT 1];
+
+        // Crear 3 alquileres previos para fidelidad
+        List<VRT_Rental__c> oldRentals = new List<VRT_Rental__c>();
+        for(Integer i=0; i<3; i++) {
+            oldRentals.add(new VRT_Rental__c(
+                VRT_LKP_Account__c = acc.Id, 
+                VRT_LKP_Vehicle__c = veh.Id,
+                VRT_DAT_InitialDate__c = Date.today().addDays(-360),
+                VRT_DAT_FinalDate__c = Date.today().addDays(-355)
+            ));
+        }
+        insert oldRentals;
+
+        Test.startTest();
+        // Crear un nuevo alquiler con retraso
+        VRT_Rental__c rental = new VRT_Rental__c(
+            VRT_LKP_Account__c = acc.Id,
+            VRT_LKP_Vehicle__c = veh.Id,
+            VRT_DAT_InitialDate__c = Date.today().addDays(1),
+            VRT_DAT_FinalDate__c = Date.today().addDays(3),
+            VRT_DAT_ReturnDate__c = Date.today().addDays(5) // Retraso!
+        );
+        insert rental;
+        Test.stopTest();
+
+        VRT_Rental__c result = [SELECT VRT_DIV_TotalCost__c, VRT_CHK_Penalty__c FROM VRT_Rental__c WHERE Id = :rental.Id];
+        System.assertEquals(true, result.VRT_CHK_Penalty__c, 'Debería estar penalizado');
+    }
+
+    @isTest
+    static void testMissingFeeError() {
+        // Crear vehículo con tipo inexistente en Custom Metadata
+        VRT_Vehicle__c veh = new VRT_Vehicle__c(
+            VRT_SEL_VehicleType__c = 'Barco',
+            VRT_NUM_Passengers__c = 4,
+            VRT_SEL_EnergyType__c = 'Otro',
+            VRT_SEL_Status__c = 'Listo',
+            VRT_TXT_LicensePlate__c = 'TEST_DE',
+            VRT_TXT_Brand__c = 'Citroën',
+            VRT_TXT_Model__c = 'Saxo',
+            VRT_NUM_Usage__c = 1005,
+            VRT_NUM_Mileage__c = 220200
+        );
+        insert veh;
+        Account acc = [SELECT Id FROM Account LIMIT 1];
+
+        try {
+            insert new VRT_Rental__c(
+                VRT_LKP_Account__c = acc.Id,
+                VRT_LKP_Vehicle__c = veh.Id,
+                VRT_DAT_InitialDate__c = Date.today(),
+                VRT_DAT_FinalDate__c = Date.today().addDays(1)
+            );
+        } catch (Exception e) {
+            System.assert(e.getMessage().contains('No existe tarifa'), 'Debería haber lanzado error de tarifa');
+        }
+    }
 }

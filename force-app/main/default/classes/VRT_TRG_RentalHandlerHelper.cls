@@ -128,9 +128,9 @@ public class VRT_TRG_RentalHandlerHelper {
 
         // 3. Obtener todas las Tarifas en un Mapa para acceso rápido
         Map<String, Decimal> feeMap = new Map<String, Decimal>();
-        for (VRT_Fee__c fee : [SELECT Tipo_de_vehiculo__c, Temporada__c, Precio_por_dia__c
-                                FROM VRT_Fee__c]) {
-            feeMap.put(fee.Tipo_de_vehiculo__c + '-' + fee.Temporada__c, fee.Precio_por_dia__c);
+        for (Rental_Fee__mdt fee : [SELECT VRT_SEL_Vehicle_Type__c, VRT_SEL_Season__c, VRT_NUM_Price_per_day__c
+                                FROM Rental_Fee__mdt]) {
+            feeMap.put(fee.VRT_SEL_Vehicle_Type__c + '-' + fee.VRT_SEL_Season__c, fee.VRT_NUM_Price_per_day__c);
         }
 
         // 4. Lógica de cálculo
