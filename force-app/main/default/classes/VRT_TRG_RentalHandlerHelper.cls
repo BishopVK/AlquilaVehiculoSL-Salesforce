@@ -119,10 +119,13 @@ public class VRT_TRG_RentalHandlerHelper {
 
         // 2. Obtener Historial de Fidelidad (Cuentas con >= 3 alquileres en 365 días)
         Set<Id> loyalAccounts = new Set<Id>();
-        for (AggregateResult ar : [SELECT VRT_LKP_Account__c accId FROM VRT_Rental__c 
+        for (AggregateResult ar : [SELECT VRT_LKP_Account__c accId
+                                   FROM VRT_Rental__c 
                                    WHERE VRT_LKP_Account__c IN :accountIds 
-                                   AND VRT_DAT_InitialDate__c = LAST_N_DAYS:365 
-                                   GROUP BY VRT_LKP_Account__c HAVING COUNT(Id) >= 3]) {
+                                   AND VRT_DAT_InitialDate__c = LAST_N_DAYS:365
+                                   AND Id NOT IN :rentals
+                                   GROUP BY VRT_LKP_Account__c
+                                   HAVING COUNT(Id) >= 3]) {
             loyalAccounts.add((Id)ar.get('accId'));
         }
 
@@ -135,6 +138,12 @@ public class VRT_TRG_RentalHandlerHelper {
 
         // 4. Lógica de cálculo
         for (VRT_Rental__c r : rentals) {
+            // Evitamos NullPointerException y aseguramos que existan fechas antes de calcular
+            if (r.VRT_DAT_InitialDate__c == null || r.VRT_DAT_FinalDate__c == null) {
+                r.addError('Las fechas de inicio y fin son obligatorias para poder calcular el precio del alquiler.');
+                continue; // Salta al siguiente alquiler del lote
+            }
+
             String season = getTemporada(r.VRT_DAT_InitialDate__c);
             String vehicleType = vehiclesMap.get(r.VRT_LKP_Vehicle__c)?.VRT_SEL_VehicleType__c;
             Decimal dailyRate = feeMap.get(vehicleType + '-' + season);
@@ -161,6 +170,8 @@ public class VRT_TRG_RentalHandlerHelper {
                 total += penalty;
                 r.VRT_CHK_Penalty__c = true;
                 info += 'Penalización 25% por ' + lateDays + ' días extra.';
+            } else {
+                r.VRT_CHK_Penalty__c = false;
             }
 
             r.VRT_DIV_TotalCost__c = total;

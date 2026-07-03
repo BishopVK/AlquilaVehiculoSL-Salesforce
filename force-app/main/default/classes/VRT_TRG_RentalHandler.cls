@@ -21,7 +21,8 @@ public class VRT_TRG_RentalHandler {
             if (oldRental.VRT_DAT_InitialDate__c != newRental.VRT_DAT_InitialDate__c ||
                 oldRental.VRT_DAT_FinalDate__c != newRental.VRT_DAT_FinalDate__c ||
                 oldRental.VRT_LKP_Vehicle__c != newRental.VRT_LKP_Vehicle__c ||
-                oldRental.VRT_LKP_Account__c != newRental.VRT_LKP_Account__c) {
+                oldRental.VRT_LKP_Account__c != newRental.VRT_LKP_Account__c ||
+                oldRental.VRT_DAT_ReturnDate__c != newRental.VRT_DAT_ReturnDate__c) {
                 rentalsToRecalculate.add(newRental);
             }
         }
