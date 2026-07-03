@@ -7,6 +7,7 @@ trigger VRT_TRG_Rental on VRT_Rental__c (after insert, after update, before inse
     }
 
     // Calculate the total rental amount before inserting or updating the rental record
+    // Vehicle fleet availability control
     if (Trigger.isBefore && Trigger.isInsert) {
         VRT_TRG_RentalHandler.onBeforeInsert(Trigger.new);
     }

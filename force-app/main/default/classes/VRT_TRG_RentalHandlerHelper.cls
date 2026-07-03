@@ -185,4 +185,23 @@ public class VRT_TRG_RentalHandlerHelper {
         if (month == 2 || month == 5 || month == 6 || month == 9) return 'Media';
         return 'Baja';
     }
+
+    public static void vehicleFleetAvailabilityControl(List<VRT_Rental__c> rentals) {
+        if (rentals.size() > 1) {
+            for (Integer i = 0; i < rentals.size(); i++) {
+                for (Integer j = i + 1; j < rentals.size(); j++) {
+                    VRT_Rental__c rentalA = rentals[i];
+                    VRT_Rental__c rentalB = rentals[j];
+
+                    if (rentalA.VRT_DAT_InitialDate__c < rentalB.VRT_DAT_FinalDate__c &&
+                        rentalA.VRT_DAT_FinalDate__c > rentalB.VRT_DAT_InitialDate__c) {
+                            // Decidir que queremos marcar. Lo óptimo serían ambas conflictivos
+                            // para avisar al usuario de que esos dos registros chocan entre sí.
+                            // rentalA.addError('Conflicto de fechas intra-lote para el mismo vehículo.');
+                            // rentalB.addError('Conflicto de fechas intra-lote para el mismo vehículo.');
+                        }
+                }
+            })
+        }
+    }
 }
