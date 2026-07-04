@@ -16,8 +16,8 @@ public class VRT_TRG_RentalHandler {
         // Vehicle fleet availability control
         List<VRT_Rental__c> rentalsToControlFleet = new List<VRT_Rental__c>();
         for (VRT_Rental__c r : newRental) {
-            if (newRental.VRT_SEL_Status__c == 'Reservado' ||
-            newRental.VRT_SEL_Status__c == 'En curso') {
+            if (r.VRT_SEL_Status__c == 'Reservado' ||
+                r.VRT_SEL_Status__c == 'En curso') {
                 rentalsToControlFleet.add(r);
             }
         }

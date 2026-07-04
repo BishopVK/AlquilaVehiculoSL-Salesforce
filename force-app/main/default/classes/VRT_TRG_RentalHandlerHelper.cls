@@ -187,26 +187,37 @@ public class VRT_TRG_RentalHandlerHelper {
     }
 
     public static void vehicleFleetAvailabilityControl(List<VRT_Rental__c> rentals) {
+        // It detects conflicts between records in the same batch and returns
+        // those that are still candidates to be saved
+        List<VRT_Rental__c> validRentals = validateInBatch(rentals);
+
+        // Check the candidates against the existing rentals in the database
+        // validateAgainstDatabase(validRentals);
+    }
+
+    private static Boolean hasDateConflict(VRT_Rental__c rentalA, VRT_Rental__c rentalB) {
+        return rentalA.VRT_LKP_Vehicle__c == rentalB.VRT_LKP_Vehicle__c &&
+            rentalA.VRT_DAT_InitialDate__c < rentalB.VRT_DAT_FinalDate__c &&
+            rentalA.VRT_DAT_FinalDate__c > rentalB.VRT_DAT_InitialDate__c;
+    }
+
+    private static List<VRT_Rental__c> validateInBatch(List<VRT_Rental__c> rentals) {
+        if (rentals.size() <= 1) {
+            return rentals;
+        }
+
         Set<VRT_Rental__c> rentalsWithConflicts = new Set<VRT_Rental__c>();
-        
-        if (rentals.size() > 1) {
-            // Validación intra-lote
-            for (Integer i = 0; i < rentals.size(); i++) {
-                for (Integer j = i + 1; j < rentals.size(); j++) {
-                    VRT_Rental__c rentalA = rentals[i];
-                    VRT_Rental__c rentalB = rentals[j];
 
-                    if (rentalA.VRT_LKP_Vehicle__c == rentalB.VRT_LKP_Vehicle__c &&
-                        rentalA.VRT_DAT_InitialDate__c < rentalB.VRT_DAT_FinalDate__c &&
-                        rentalA.VRT_DAT_FinalDate__c > rentalB.VRT_DAT_InitialDate__c) {
-                            // Decidir que queremos marcar. Lo óptimo serían ambos conflictivos
-                            // para avisar al usuario de que esos dos registros chocan entre sí.
-                            rentalsWithConflicts.add(rentalA);
-                            rentalsWithConflicts.add(rentalB);
-                            // rentalA.addError('Conflicto de fechas intra-lote para el mismo vehículo.');
-                            // rentalB.addError('Conflicto de fechas intra-lote para el mismo vehículo.');
+        // Validación intra-lote
+        for (Integer i = 0; i < rentals.size(); i++) {
+            for (Integer j = i + 1; j < rentals.size(); j++) {
+                VRT_Rental__c rentalA = rentals[i];
+                VRT_Rental__c rentalB = rentals[j];
 
-                        }
+                if (hasDateConflict(rentalA, rentalB)) {
+                    // Marcamos ambos registros conflictivos
+                    rentalsWithConflicts.add(rentalA);
+                    rentalsWithConflicts.add(rentalB);
                 }
             }
         }
@@ -216,12 +227,18 @@ public class VRT_TRG_RentalHandlerHelper {
             r.addError('Existe un conflicto de fechas para este vehículo.');
         }
 
-        // New Set with only valid rentals
-        List<VRT_Rental__c> validdRentals = new List<VRT_Rental__c>();
+        // Build a list containing only rentals without intra-batch conflicts.
+        List<VRT_Rental__c> validRentals = new List<VRT_Rental__c>();
         for (VRT_Rental__c rental : rentals) {
             if (!rentalsWithConflicts.contains(rental)) {
-                validdRentals.add(rental);
+                validRentals.add(rental);
             }
         }
+
+        return validRentals;
+    }
+
+    private static void validateAgainstDatabase(List<VRT_Rental__c> validRentals) {
+        // Validate Agains Database Code
     }
 }
