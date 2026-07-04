@@ -192,7 +192,7 @@ public class VRT_TRG_RentalHandlerHelper {
         List<VRT_Rental__c> validRentals = validateInBatch(rentals);
 
         // Check the candidates against the existing rentals in the database
-        // validateAgainstDatabase(validRentals);
+        validateAgainstDatabase(validRentals);
     }
 
     private static Boolean hasDateConflict(VRT_Rental__c rentalA, VRT_Rental__c rentalB) {
@@ -238,23 +238,61 @@ public class VRT_TRG_RentalHandlerHelper {
         return validRentals;
     }
 
-    private static void validateAgainstDatabase(List<VRT_Rental__c> validRentals) {
-        // Extract vehiclesIds from validRentals
+    private static void validateAgainstDatabase(List<VRT_Rental__c> batchRentals) {
+        // Extract vehiclesIds and Rentals Ids from batchRentals
         Set<Id> vehicleIds = new Set<Id>();
-        for (VRT_Rental__c rental : validRentals) {
+        Set<Id> batchIds = new Set<Id>();
+        for (VRT_Rental__c rental : batchRentals) {
             vehicleIds.add(rental.VRT_LKP_Vehicle__c);
+            if (rental.Id != null) {
+                batchIds.add(rental.Id);
+            }
         }
 
         // SOQL query to retrieve BBDD rentals
-        List<VRT_Rental__c> registeredRentals = [
-            SELECT VRT_LKP_Vehicle__c,
-                VRT_DAT_InitialDate__c,
-                VRT_DAT_FinalDate__c,
-                VRT_SEL_Status__c
-            FROM VRT_Rental__c
-            WHERE VRT_LKP_Vehicle__c IN :vehicleIds
-            AND VRT_SEL_Status__c IN ('Reservado', 'En curso')
-            AND Id NOT IN :validRentals
-        ];
+        List<VRT_Rental__c> dbRentals = new List<VRT_Rental__c>();
+
+        if (batchIds.isEmpty()) {
+            // Insert Case (Not Ids yet)
+            dbRentals = [
+                SELECT Id,
+                    VRT_LKP_Vehicle__c,
+                    VRT_DAT_InitialDate__c,
+                    VRT_DAT_FinalDate__c,
+                    VRT_SEL_Status__c
+                FROM VRT_Rental__c
+                WHERE VRT_LKP_Vehicle__c IN :vehicleIds
+                AND VRT_SEL_Status__c IN ('Reservado', 'En curso')
+            ];
+        } else {
+            // Update Case (With Ids)
+            dbRentals = [
+                SELECT Id,
+                    VRT_LKP_Vehicle__c,
+                    VRT_DAT_InitialDate__c,
+                    VRT_DAT_FinalDate__c,
+                    VRT_SEL_Status__c
+                FROM VRT_Rental__c
+                WHERE VRT_LKP_Vehicle__c IN :vehicleIds
+                AND VRT_SEL_Status__c IN ('Reservado', 'En curso')
+                AND Id NOT IN :batchIds
+            ];
+        }
+
+        // Validation
+        Set<VRT_Rental__c> rentalsWithConflicts = new Set<VRT_Rental__c>();
+        for (VRT_Rental__c databaseRental : dbRentals) {
+            for (VRT_Rental__c batchRental : batchRentals) {
+                if (hasDateConflict(databaseRental, batchRental)) {
+                    // Marcamos el registro del lote cómo conflictivo
+                    rentalsWithConflicts.add(batchRental);
+                }
+            }
+        }
+
+        // Notify conflict errors
+        for (VRT_Rental__c r : rentalsWithConflicts) {
+            r.addError('Existe un conflicto de fechas para este vehículo.');
+        }
     }
 }
