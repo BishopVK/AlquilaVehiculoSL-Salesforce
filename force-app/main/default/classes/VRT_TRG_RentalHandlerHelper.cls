@@ -239,6 +239,22 @@ public class VRT_TRG_RentalHandlerHelper {
     }
 
     private static void validateAgainstDatabase(List<VRT_Rental__c> validRentals) {
-        // Validate Agains Database Code
+        // Extract vehiclesIds from validRentals
+        Set<Id> vehicleIds = new Set<Id>();
+        for (VRT_Rental__c rental : validRentals) {
+            vehicleIds.add(rental.VRT_LKP_Vehicle__c);
+        }
+
+        // SOQL query to retrieve BBDD rentals
+        List<VRT_Rental__c> registeredRentals = [
+            SELECT VRT_LKP_Vehicle__c,
+                VRT_DAT_InitialDate__c,
+                VRT_DAT_FinalDate__c,
+                VRT_SEL_Status__c
+            FROM VRT_Rental__c
+            WHERE VRT_LKP_Vehicle__c IN :vehicleIds
+            AND VRT_SEL_Status__c IN ('Reservado', 'En curso')
+            AND Id NOT IN :validRentals
+        ];
     }
 }
