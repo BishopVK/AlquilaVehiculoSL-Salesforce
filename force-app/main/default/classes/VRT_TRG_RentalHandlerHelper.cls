@@ -187,21 +187,41 @@ public class VRT_TRG_RentalHandlerHelper {
     }
 
     public static void vehicleFleetAvailabilityControl(List<VRT_Rental__c> rentals) {
+        Set<VRT_Rental__c> rentalsWithConflicts = new Set<VRT_Rental__c>();
+        
         if (rentals.size() > 1) {
+            // Validación intra-lote
             for (Integer i = 0; i < rentals.size(); i++) {
                 for (Integer j = i + 1; j < rentals.size(); j++) {
                     VRT_Rental__c rentalA = rentals[i];
                     VRT_Rental__c rentalB = rentals[j];
 
-                    if (rentalA.VRT_DAT_InitialDate__c < rentalB.VRT_DAT_FinalDate__c &&
+                    if (rentalA.VRT_LKP_Vehicle__c == rentalB.VRT_LKP_Vehicle__c &&
+                        rentalA.VRT_DAT_InitialDate__c < rentalB.VRT_DAT_FinalDate__c &&
                         rentalA.VRT_DAT_FinalDate__c > rentalB.VRT_DAT_InitialDate__c) {
-                            // Decidir que queremos marcar. Lo óptimo serían ambas conflictivos
+                            // Decidir que queremos marcar. Lo óptimo serían ambos conflictivos
                             // para avisar al usuario de que esos dos registros chocan entre sí.
+                            rentalsWithConflicts.add(rentalA);
+                            rentalsWithConflicts.add(rentalB);
                             // rentalA.addError('Conflicto de fechas intra-lote para el mismo vehículo.');
                             // rentalB.addError('Conflicto de fechas intra-lote para el mismo vehículo.');
+
                         }
                 }
-            })
+            }
+        }
+
+        // Notify conflict errors
+        for (VRT_Rental__c r : rentalsWithConflicts) {
+            r.addError('Existe un conflicto de fechas para este vehículo.');
+        }
+
+        // New Set with only valid rentals
+        List<VRT_Rental__c> validdRentals = new List<VRT_Rental__c>();
+        for (VRT_Rental__c rental : rentals) {
+            if (!rentalsWithConflicts.contains(rental)) {
+                validdRentals.add(rental);
+            }
         }
     }
 }

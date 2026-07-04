@@ -15,10 +15,12 @@ public class VRT_TRG_RentalHandler {
 
         // Vehicle fleet availability control
         List<VRT_Rental__c> rentalsToControlFleet = new List<VRT_Rental__c>();
-        if (newRental.VRT_SEL_Status__c == 'Reservado' ||
-                newRental.VRT_SEL_Status__c == 'En curso') {
-                rentalsToControlFleet.add(newRental);
+        for (VRT_Rental__c r : newRental) {
+            if (newRental.VRT_SEL_Status__c == 'Reservado' ||
+            newRental.VRT_SEL_Status__c == 'En curso') {
+                rentalsToControlFleet.add(r);
             }
+        }
         VRT_TRG_RentalHandlerHelper.vehicleFleetAvailabilityControl(rentalsToControlFleet);
     }
 
@@ -43,16 +45,22 @@ public class VRT_TRG_RentalHandler {
         for (Id rentalId : newMap.keySet()) {
             VRT_Rental__c oldRental = oldMap.get(rentalId);
             VRT_Rental__c newRental = newMap.get(rentalId);
-            if (oldRental.VRT_SEL_Status__c != newRental.VRT_SEL_Status__c &&
-                (oldRental.VRT_SEL_Status__c != 'Reservado' &&
-                oldRental.VRT_SEL_Status__c != 'En curso') &&
-                (newRental.VRT_SEL_Status__c == 'Reservado' ||
-                newRental.VRT_SEL_Status__c == 'En curso')) {
+
+            // El registro está o pasa a un estado que requiere bloquear el vehículo
+            Boolean isActiveStatus = (newRental.VRT_SEL_Status__c == 'Reservado' ||
+                                        newRental.VRT_SEL_Status__c == 'En curso');
+
+            // Evaluamos si cambió algún dato crítico
+            Boolean dataChanged = (oldRental.VRT_SEL_Status__c != newRental.VRT_SEL_Status__c ||
+                                    oldRental.VRT_DAT_InitialDate__c != newRental.VRT_DAT_InitialDate__c ||
+                                    oldRental.VRT_DAT_FinalDate__c != newRental.VRT_DAT_FinalDate__c ||
+                                    oldRental.VRT_LKP_Vehicle__c != newRental.VRT_LKP_Vehicle__c);
+
+            if (isActiveStatus && dataChanged) {
                 rentalsToUpdateAvailability.add(newRental);
             }
         }
         // Vehicle fleet availability control
-        VRT_TRG_RentalHandlerHelper.vehicleFleetAvailabilityControl(rentalsToUpdateAvailability
-        );
+        VRT_TRG_RentalHandlerHelper.vehicleFleetAvailabilityControl(rentalsToUpdateAvailability);
     }
 }
