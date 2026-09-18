@@ -295,4 +295,34 @@ public class VRT_TRG_RentalHandlerHelper {
             r.addError('Existe un conflicto de fechas para este vehículo.');
         }
     }
+
+    // Update VRT_TXT_RejectionReason__c field if status changes to 'Cancelado'
+    public static void captureRejectionComments(List<VRT_Rental__c> rejectedRentals) {
+        Set<Id> rentalIds = new Set<Id>();
+        for (VRT_Rental__c r : rejectedRentals) {
+            rentalIds.add(r.Id);
+        }
+
+        // 1. Check the last approval instance and its rejected step for each Rental
+        Map<Id, String> rejectionReasonMap = new Map<Id, String>();
+        for (ProcessInstance pi : [
+            SELECT TargetObjectId, 
+                (SELECT Comments FROM Steps WHERE StepStatus = 'Rejected' ORDER BY CreatedDate DESC LIMIT 1)
+            FROM ProcessInstance 
+            WHERE TargetObjectId IN :rentalIds 
+            ORDER BY CreatedDate DESC
+        ]) {
+            // If there are rejected steps and they have a recorded comment
+            if (!pi.Steps.isEmpty() && String.isNotBlank(pi.Steps[0].Comments)) {
+                rejectionReasonMap.put(pi.TargetObjectId, pi.Steps[0].Comments);
+            }
+        }
+
+        // 2. Assign the comment to the custom field of each record in the batch
+        for (VRT_Rental__c r : rejectedRentals) {
+            if (rejectionReasonMap.containsKey(r.Id)) {
+                r.VRT_TXT_RejectionReason__c = rejectionReasonMap.get(r.Id);
+            }
+        }
+    }
 }

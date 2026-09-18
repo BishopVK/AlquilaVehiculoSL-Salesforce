@@ -62,5 +62,20 @@ public class VRT_TRG_RentalHandler {
         }
         // Vehicle fleet availability control
         VRT_TRG_RentalHandlerHelper.vehicleFleetAvailabilityControl(rentalsToUpdateAvailability);
+
+        // Detect rentals that change to 'Cancelled' status
+        List<VRT_Rental__c> rejectedRentals = new List<VRT_Rental__c>();
+        for (Id rentalId : newMap.keySet()) {
+            VRT_Rental__c oldRental = oldMap.get(rentalId);
+            VRT_Rental__c newRental = newMap.get(rentalId);
+
+            if (oldRental.VRT_SEL_Status__c != 'Cancelado' && newRental.VRT_SEL_Status__c == 'Cancelado') {
+                rejectedRentals.add(newRental);
+            }
+        }
+
+        if (!rejectedRentals.isEmpty()) {
+            VRT_TRG_RentalHandlerHelper.captureRejectionComments(rejectedRentals);
+        }
     }
 }
