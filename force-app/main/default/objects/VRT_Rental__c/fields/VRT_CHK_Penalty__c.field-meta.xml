@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VRT_CHK_Penalty__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Muestra si el cliente tuvo una penalización por este alquiler.</description>
+    <label>Tiene Penalización</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

@@ -30,6 +30,16 @@
                 <default>false</default>
                 <label>Cancelado</label>
             </value>
+            <value>
+                <fullName>Pendiente de aprobación</fullName>
+                <default>false</default>
+                <label>Pendiente de aprobación</label>
+            </value>
+            <value>
+                <fullName>Confirmado</fullName>
+                <default>false</default>
+                <label>Confirmado</label>
+            </value>
         </valueSetDefinition>
     </valueSet>
 </CustomField>

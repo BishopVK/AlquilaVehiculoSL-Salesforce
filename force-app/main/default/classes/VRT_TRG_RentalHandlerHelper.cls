@@ -296,7 +296,7 @@ public class VRT_TRG_RentalHandlerHelper {
         }
     }
 
-    // Update VRT_TXT_RejectionReason__c field if status changes to 'Cancelado'
+    // Update VRT_TXT_RejectionReason_c__c field if status changes to 'Cancelado'
     public static void captureRejectionComments(List<VRT_Rental__c> rejectedRentals) {
         Set<Id> rentalIds = new Set<Id>();
         for (VRT_Rental__c r : rejectedRentals) {
@@ -321,7 +321,7 @@ public class VRT_TRG_RentalHandlerHelper {
         // 2. Assign the comment to the custom field of each record in the batch
         for (VRT_Rental__c r : rejectedRentals) {
             if (rejectionReasonMap.containsKey(r.Id)) {
-                r.VRT_TXT_RejectionReason__c = rejectionReasonMap.get(r.Id);
+                r.VRT_TXT_RejectionReason_c__c = rejectionReasonMap.get(r.Id);
             }
         }
     }
