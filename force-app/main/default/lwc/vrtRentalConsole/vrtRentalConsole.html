@@ -1,0 +1,111 @@
+<template>
+    <lightning-card title="Consola Operativa de Alquileres" icon-name="standard:orders">
+        <div class="slds-p-around_medium">
+            
+            <!-- SECCIÓN 1: FORMULARIO DE NUEVO ALQUILER Y SIMULACIÓN -->
+            <div class="slds-box slds-theme_default slds-m-bottom_medium">
+                <h3 class="slds-text-heading_small slds-m-bottom_small"><strong>Nuevo Alquiler</strong></h3>
+                
+                <div class="slds-grid slds-gutters slds-wrap">
+                    <!-- FILA 1: Buscador avanzado de Vehículo (Ancho completo) -->
+                    <div class="slds-col slds-size_1-of-1 slds-m-bottom_small">
+                        <lightning-record-picker
+                            label="Vehículo"
+                            placeholder="Buscar por código, marca, modelo y/o matrícula (ej: Dacia Sandero 1234BCD)..."
+                            object-api-name="VRT_Vehicle__c"
+                            value={vehicleId}
+                            display-info={vehicleDisplayInfo}
+                            matching-info={vehicleMatchingInfo}
+                            onchange={handleVehicleChange}
+                            required>
+                        </lightning-record-picker>
+                    </div>
+
+                    <!-- FILA 2: Estado de Pago, Fecha Inicio y Fecha Fin (3 Columnas) -->
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                        <lightning-combobox
+                            label="Estado de Pago"
+                            value={paymentStatus}
+                            options={paymentOptions}
+                            onchange={handlePaymentStatusChange}
+                            required>
+                        </lightning-combobox>
+                    </div>
+
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                        <lightning-input 
+                            type="date" 
+                            label="Fecha de Inicio" 
+                            value={startDate}
+                            onchange={handleStartDateChange}
+                            required>
+                        </lightning-input>
+                    </div>
+
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                        <lightning-input 
+                            type="date" 
+                            label="Fecha de Fin" 
+                            value={endDate}
+                            onchange={handleEndDateChange}
+                            required>
+                        </lightning-input>
+                    </div>
+
+                </div>
+
+                <!-- Bloque de Visualización del Precio Simulado -->
+                <template if:true={simulatedPrice}>
+                    <div class="simulation-box slds-m-top_medium slds-p-around_small slds-theme_success slds-box">
+                        <p class="slds-text-title_bold">Precio Total Simulado:</p>
+                        <p class="slds-text-heading_medium">{simulatedPriceFormatted}</p>
+                    </div>
+                </template>
+
+                <!-- Botones de Acción -->
+                <div class="slds-m-top_medium slds-text-align_right">
+                    <lightning-button 
+                        label="Simular Precio" 
+                        icon-name="utility:calculator" 
+                        onclick={handleSimulatePrice} 
+                        class="slds-m-right_x-small">
+                    </lightning-button>
+                    
+                    <lightning-button 
+                        label="Guardar Alquiler" 
+                        variant="brand" 
+                        icon-name="utility:save" 
+                        onclick={handleCreateRental}>
+                    </lightning-button>
+                </div>
+            </div>
+
+            <!-- SECCIÓN 2: LISTADO Y FILTRO DE ALQUILERES ACTIVOS -->
+            <div class="slds-box slds-theme_default">
+                <div class="slds-grid slds-grid_align-spread slds-m-bottom_small">
+                    <h3 class="slds-text-heading_small"><strong>Alquileres de la Cuenta</strong></h3>
+                    
+                    <!-- Campo de búsqueda/filtrado local -->
+                    <div class="slds-size_1-of-3">
+                        <lightning-input 
+                            type="search" 
+                            placeholder="Buscar por estado o vehículo..." 
+                            onchange={handleSearchKeyChange}>
+                        </lightning-input>
+                    </div>
+                </div>
+
+                <!-- Tabla de Datos -->
+                <div class="datatable-container">
+                    <lightning-datatable
+                        key-field="id"
+                        data={filteredRentals}
+                        columns={columns}
+                        hide-checkbox-column>
+                    </lightning-datatable>
+                </div>
+            </div>
+
+        </div>
+    </lightning-card>
+</template>

@@ -1,0 +1,9 @@
+.simulation-box {
+    background-color: #eef7ee;
+    border-color: #4bca81;
+    border-radius: 4px;
+}
+
+.datatable-container {
+    height: 250px;
+}
