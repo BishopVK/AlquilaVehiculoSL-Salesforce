@@ -3,7 +3,7 @@
     <fullName>VRT_TXT_SearchKey__c</fullName>
     <description>Concatenación del Name + Marca + Módelo + Matrícula</description>
     <externalId>false</externalId>
-    <formula>Name &amp; &quot; &quot; &amp; VRT_TXT_Brand__c &amp; &quot; &quot; &amp; VRT_TXT_Model__c &amp; &quot; &quot; &amp; VRT_TXT_LicensePlate__c</formula>
+    <formula>VRT_TXT_Brand__c &amp; &quot; &quot; &amp; VRT_TXT_Model__c &amp; &quot; &quot; &amp; VRT_TXT_LicensePlate__c</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>Info para buscador</label>
     <required>false</required>
