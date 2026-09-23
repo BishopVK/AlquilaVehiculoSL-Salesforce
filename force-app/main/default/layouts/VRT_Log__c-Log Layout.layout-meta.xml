@@ -7,60 +7,24 @@
         <label>Information</label>
         <layoutColumns>
             <layoutItems>
-                <behavior>Readonly</behavior>
+                <behavior>Required</behavior>
                 <field>Name</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>VRT_DAT_InitialDate__c</field>
+                <field>VRT_TXT_ProcessName__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>VRT_DAT_FinalDate__c</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Readonly</behavior>
-                <field>VRT_FOR_Duration__c</field>
+                <field>VRT_TXT_Message__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>VRT_LKP_Vehicle__c</field>
+                <field>VRT_DAT_LogDate__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>VRT_LKP_Account__c</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Edit</behavior>
-                <field>VRT_DIV_TotalCost__c</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Required</behavior>
-                <field>VRT_SEL_Status__c</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Edit</behavior>
-                <field>VRT_SEL_PaymentStatus__c</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Edit</behavior>
-                <field>VRT_TXT_Notes__c</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Edit</behavior>
-                <field>VRT_DAT_ReturnDate__c</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Edit</behavior>
-                <field>VRT_TXT_Cost_Info__c</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Edit</behavior>
-                <field>VRT_CHK_Penalty__c</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Edit</behavior>
-                <field>VRT_TXT_RejectionReason_c__c</field>
+                <field>VRT_LKP_Rental__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
@@ -117,22 +81,6 @@
         <fields>CORE.USERS.FULL_NAME</fields>
         <fields>TASK.LAST_UPDATE</fields>
         <relatedList>RelatedHistoryList</relatedList>
-    </relatedLists>
-    <relatedLists>
-        <fields>CreatedDate</fields>
-        <fields>StepStatus</fields>
-        <fields>OriginalActor</fields>
-        <fields>Actor</fields>
-        <fields>Comments</fields>
-        <relatedList>RelatedProcessHistoryList</relatedList>
-    </relatedLists>
-    <relatedLists>
-        <fields>NAME</fields>
-        <relatedList>VRT_Invoice__c.VRT_LKP_Rental__c</relatedList>
-    </relatedLists>
-    <relatedLists>
-        <fields>NAME</fields>
-        <relatedList>VRT_Log__c.VRT_LKP_Rental__c</relatedList>
     </relatedLists>
     <showEmailCheckbox>false</showEmailCheckbox>
     <showHighlightsPanel>false</showHighlightsPanel>
