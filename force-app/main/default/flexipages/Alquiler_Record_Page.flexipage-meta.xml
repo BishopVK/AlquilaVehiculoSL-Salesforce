@@ -20,6 +20,10 @@
                     <value>false</value>
                 </componentInstanceProperties>
                 <componentInstanceProperties>
+                    <name>hideSlackAction</name>
+                    <value>false</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
                     <name>numVisibleActions</name>
                     <value>3</value>
                 </componentInstanceProperties>
@@ -85,6 +89,16 @@
                 <identifier>RecordVRT_DAT_FinalDate_cField</identifier>
             </fieldInstance>
         </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.VRT_DAT_ReturnDate__c</fieldItem>
+                <identifier>RecordVRT_DAT_ReturnDate__cField</identifier>
+            </fieldInstance>
+        </itemInstances>
         <name>Facet-7a18c8bc-0fe9-4a13-9566-49d92641e411</name>
         <type>Facet</type>
     </flexiPageRegions>
@@ -124,6 +138,16 @@
                         <rightValue>Cancelado</rightValue>
                     </criteria>
                 </visibilityRule>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>readonly</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.VRT_CHK_Penalty__c</fieldItem>
+                <identifier>RecordVRT_CHK_Penalty_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <name>Facet-1393396d-d34e-434a-a388-3b632313366d</name>
@@ -168,7 +192,7 @@
             <fieldInstance>
                 <fieldInstanceProperties>
                     <name>uiBehavior</name>
-                    <value>none</value>
+                    <value>readonly</value>
                 </fieldInstanceProperties>
                 <fieldItem>Record.VRT_DIV_TotalCost__c</fieldItem>
                 <identifier>RecordVRT_DIV_TotalCost_cField</identifier>
@@ -186,6 +210,23 @@
                 </fieldInstanceProperties>
                 <fieldItem>Record.VRT_LKP_Account__c</fieldItem>
                 <identifier>RecordVRT_LKP_Account_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>readonly</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.VRT_TXT_Cost_Info__c</fieldItem>
+                <identifier>RecordVRT_TXT_Cost_Info_cField</identifier>
+                <visibilityRule>
+                    <criteria>
+                        <leftValue>{!Record.VRT_DIV_TotalCost__c}</leftValue>
+                        <operator>NE</operator>
+                        <rightValue>0</rightValue>
+                    </criteria>
+                </visibilityRule>
             </fieldInstance>
         </itemInstances>
         <name>Facet-e826578d-6424-48ec-ba68-e7bb4a3d7b08</name>
@@ -230,6 +271,23 @@
         <type>Facet</type>
     </flexiPageRegions>
     <flexiPageRegions>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>readonly</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.VRT_TXT_RejectionReason_c__c</fieldItem>
+                <identifier>RecordVRT_TXT_RejectionReason_c__cField</identifier>
+                <visibilityRule>
+                    <criteria>
+                        <leftValue>{!Record.VRT_SEL_Status__c}</leftValue>
+                        <operator>EQUAL</operator>
+                        <rightValue>Cancelado</rightValue>
+                    </criteria>
+                </visibilityRule>
+            </fieldInstance>
+        </itemInstances>
         <name>Facet-a028c3bf-aaa1-47de-ab35-41e41d3da644</name>
         <type>Facet</type>
     </flexiPageRegions>
