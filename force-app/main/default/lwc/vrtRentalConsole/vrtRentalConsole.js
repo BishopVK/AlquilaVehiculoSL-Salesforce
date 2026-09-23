@@ -43,7 +43,7 @@ export default class VrtRentalConsole extends LightningElement {
         additionalFields: ['VRT_TXT_SearchKey__c']
     };
 
-    // 2. Configura por qué campos buscar cuando el usuario escribe en el input (hasta 2 campos adicionales)
+    // 2. Configura por qué campos buscar cuando el usuario escribe en el input (máximo 1 campo adicional)
     vehicleMatchingInfo = {
         primaryField: { fieldPath: 'Name' },
         additionalFields: [
@@ -51,9 +51,9 @@ export default class VrtRentalConsole extends LightningElement {
         ]
     };
 
-    // =========================================================================
-    // 1. LECTURA DE BBDD VÍA @WIRE (Reemplaza a los datos mock)
-    // =========================================================================
+    // ============================
+    // 1. LECTURA DE BBDD VÍA @WIRE
+    // ============================
     @wire(getActiveRentals, { accountId: '$recordId' })
     wiredRentals(result) {
         this.wiredRentalsResult = result;
@@ -120,6 +120,11 @@ export default class VrtRentalConsole extends LightningElement {
     handleSimulatePrice() {
         if (!this.vehicleId || !this.startDate || !this.endDate) {
             this.showNotification('Formulario incompleto', 'Por favor, indica el vehículo y el rango de fechas.', 'warning');
+            return;
+        }
+
+        if (this.startDate >= this.endDate) {
+            this.showNotification('Fechas incorrectas', 'Por favor, asegurate de que la fecha de fin sea posterior a la fecha de inicio.', 'warning');
             return;
         }
 
