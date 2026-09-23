@@ -15,6 +15,8 @@ public with sharing class VRT_LWC_RentalConsoleController {
                    VRT_DAT_FinalDate__c, VRT_SEL_Status__c, VRT_DIV_TotalCost__c
             FROM VRT_Rental__c
             WHERE VRT_LKP_Account__c = :accountId
+            AND (VRT_SEL_Status__c = 'Completado'
+            OR VRT_SEL_Status__c = 'Reservado')
             ORDER BY VRT_DAT_InitialDate__c DESC
         ];
     }
