@@ -64,9 +64,9 @@
     </actionOverrides>
     <brand>
         <headerColor>#FA8909</headerColor>
-        <logo>alquilavehiculo_128px2</logo>
+        <logo>alquilavehiculo_128px3</logo>
         <logoVersion>1</logoVersion>
-        <shouldOverrideOrgTheme>false</shouldOverrideOrgTheme>
+        <shouldOverrideOrgTheme>true</shouldOverrideOrgTheme>
     </brand>
     <description>App para alquiler de vehículos</description>
     <formFactors>Small</formFactors>
@@ -85,6 +85,8 @@
     <tabs>VRT_Fee__c</tabs>
     <tabs>standard-report</tabs>
     <tabs>standard-Dashboard</tabs>
+    <tabs>VRT_Invoice__c</tabs>
+    <tabs>VRT_Log__c</tabs>
     <uiType>Lightning</uiType>
     <utilityBar>AlquilaVeh_culo_S_L_UtilityBar</utilityBar>
 </CustomApplication>
