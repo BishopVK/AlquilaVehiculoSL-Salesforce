@@ -325,4 +325,28 @@ public class VRT_TRG_RentalHandlerHelper {
             }
         }
     }
+
+    // 4.5: Ejecutar de forma asíncrona:
+    // Consulta si ya existen facturas para esos alquileres (evitando duplicados)
+    // Crea las facturas
+    // Envía los emails
+    // Registrar los logs de éxito o de error.
+    public static void processCompletedRentals(Map<Id, VRT_Rental__c> oldMap, Map<Id, VRT_Rental__c> newMap) {
+        Set<Id> completedRentalIds = new Set<Id>();
+
+        for (Id rentalId : newMap.keySet()) {
+            VRT_Rental__c oldRental = oldMap.get(rentalId);
+            VRT_Rental__c newRental = newMap.get(rentalId);
+            
+            // Detectamos la transición de estado hacia 'Completado'
+            if (newRental.VRT_SEL_Status__c == 'Completado' && oldRental.VRT_SEL_Status__c != 'Completado') {
+                completedRentalIds.add(rentalId);
+            }
+        }
+
+        // Encolamos el proceso asíncrono solo si hay registros coincidentes
+        if (!completedRentalIds.isEmpty()) {
+            System.enqueueJob(new VRT_QUE_InvoiceProcessor(completedRentalIds));
+        }
+    }
 }
