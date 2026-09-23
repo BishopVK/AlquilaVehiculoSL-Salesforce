@@ -21,9 +21,9 @@
                 <label>Pendiente</label>
             </value>
             <value>
-                <fullName>Emitido</fullName>
+                <fullName>Emitida</fullName>
                 <default>false</default>
-                <label>Emitido</label>
+                <label>Emitida</label>
             </value>
             <value>
                 <fullName>Borrador</fullName>
