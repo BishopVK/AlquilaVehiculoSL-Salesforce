@@ -1,0 +1,41 @@
+<template>
+    <lightning-card title="Buscador de flota" icon-name="standard:vehicle">
+        <div class="slds-var-p-around_medium">
+
+            <!-- Caja de busqueda -->
+            <lightning-input
+                name="fleet-search"
+                label="Buscar Vehículo (Introduce al menos 2 caracteres para iniciar la búsqueda en la flota.)"
+                placeholder="Buscar por marca, modelo o matrícula (ej. Dacia, Sandero, 1234ABC)"
+                value={searchTerm}
+                onchange={handleInputChange}
+                type="search"
+                min-length = 2
+            ></lightning-input>
+
+            <!-- Área de Resultados -->
+            <div class="slds-var-m-top_medium">
+
+                <!-- CASO 1: Hay resultados coincidentes -->
+                <template if:true={hasResults}>
+                    <lightning-datatable
+                        key-field="Id"
+                        data={vehicles}
+                        columns={columns}
+                        hide-checkbox-column
+                    ></lightning-datatable>
+                </template>
+
+                <!-- CASO 2: Se ha buscado (>= 2 caracteres) pero no se encontró ningún vehículo -->
+                <template if:true={isSearchEntered}>
+                    <template if:false={hasResults}>
+                        <p class="slds-text-align_center slds-var-m-top_medium slds-text-color_weak">
+                            No se han encontrado vehículos que coincidan con el texto introducido.
+                        </p>
+                    </template>
+                </template>
+            </div>
+
+        </div>
+    </lightning-card>
+</template>
