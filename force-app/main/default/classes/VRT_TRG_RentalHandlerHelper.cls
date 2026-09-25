@@ -1,4 +1,5 @@
 public class VRT_TRG_RentalHandlerHelper {
+    // Track I: Review and update the vehicle status if necessary
     public static void updateConditionVehicle(List<VRT_Rental__c> insertedRental) {
         // 1. Contar usos por vehículo
         Map<Id, Integer> vehicleUsageCount = new Map<Id, Integer>();
@@ -53,6 +54,7 @@ public class VRT_TRG_RentalHandlerHelper {
         update vehicles;
     }
 
+    // Track I: Calculate the total number of kilometers the vehicle has traveled
     public static void updateVehicleRentalCompleted(Map<Id, VRT_Rental__c> oldMap, Map<Id, VRT_Rental__c> newMap) {
         // 1. Lista donde guardamos los vehículos a actualizar y los días de transcurridos de alquiler
         Map<Id, Decimal> vehiclesIdsDays = new Map<Id, Decimal>();
@@ -102,7 +104,7 @@ public class VRT_TRG_RentalHandlerHelper {
         update vehicles;
     }
 
-    // Calculate the total rental amount before inserting or updating the rental record
+    // 4.1 Calculate the total rental amount before inserting or updating the rental record
     public static void calculatePricing(List<VRT_Rental__c> rentals) {
         Set<Id> vehicleIds = new Set<Id>();
         Set<Id> accountIds = new Set<Id>();
@@ -186,6 +188,7 @@ public class VRT_TRG_RentalHandlerHelper {
         return 'Baja';
     }
 
+    // 4.2 Vehicle fleet availability control
     public static void vehicleFleetAvailabilityControl(List<VRT_Rental__c> rentals) {
         // It detects conflicts between records in the same batch and returns
         // those that are still candidates to be saved
@@ -296,7 +299,7 @@ public class VRT_TRG_RentalHandlerHelper {
         }
     }
 
-    // Update VRT_TXT_RejectionReason_c__c field if status changes to 'Cancelado'
+    // 4.3 Update VRT_TXT_RejectionReason_c__c field if status changes to 'Cancelado'
     public static void captureRejectionComments(List<VRT_Rental__c> rejectedRentals) {
         Set<Id> rentalIds = new Set<Id>();
         for (VRT_Rental__c r : rejectedRentals) {

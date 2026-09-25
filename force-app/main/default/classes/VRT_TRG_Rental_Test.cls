@@ -81,6 +81,7 @@ public class VRT_TRG_Rental_Test {
         insert vehicles;
     }
 
+    // Track I
     @isTest
     static void testUpdateConditionVehicleRecienFabricado() {
         // 1. Get id from a car whit 0-50 usages
@@ -118,6 +119,7 @@ public class VRT_TRG_Rental_Test {
         }
     }
 
+    // Track I
     @isTest
     static void testUpdateConditionVehicleCasiNuevo() {
         // 1. Get id from a car whit 50-200 usages
@@ -144,6 +146,7 @@ public class VRT_TRG_Rental_Test {
         System.assertEquals('Casi nuevo', checkVehicle.VRT_SEL_Condition__c);
     }
 
+    // Track I
     @isTest
     static void testUpdateConditionVehicleAlgoDesgastado() {
         // 1. Get id from a car whit 200-500 usages
@@ -170,6 +173,7 @@ public class VRT_TRG_Rental_Test {
         System.assertEquals('Algo desgastado', checkVehicle.VRT_SEL_Condition__c);
     }
 
+    // Track I
     @isTest
     static void testUpdateConditionVehicleBastanteDesgastado() {
         // 1. Get id from a car whit 500-1000 usages
@@ -196,6 +200,7 @@ public class VRT_TRG_Rental_Test {
         System.assertEquals('Bastante desgastado', checkVehicle.VRT_SEL_Condition__c);
     }
 
+    // Track I
     @isTest
     static void testUpdateConditionVehicleDeplorable() {
         // 1. Get id from a car whit +1000 usages
@@ -222,6 +227,7 @@ public class VRT_TRG_Rental_Test {
         System.assertEquals('Deplorable', checkVehicle.VRT_SEL_Condition__c);
     }
 
+    // Track I
     @isTest
     static void testUpdateVehicleRentalCompleted () {
         // 1. Get id from a car with 0km
@@ -272,6 +278,7 @@ public class VRT_TRG_Rental_Test {
         }
     }
 
+    // 4.1
     @isTest
     static void testPricingCalculation() {
         Account acc = [SELECT Id FROM Account LIMIT 1];
@@ -292,6 +299,7 @@ public class VRT_TRG_Rental_Test {
         System.assertNotEquals(null, result.VRT_DIV_TotalCost__c, 'El coste debería haberse calculado');
     }
 
+    // 4.1
     @isTest
     static void testLoyaltyAndPenalty() {
         Account acc = [SELECT Id FROM Account LIMIT 1];
@@ -325,6 +333,7 @@ public class VRT_TRG_Rental_Test {
         System.assertEquals(true, result.VRT_CHK_Penalty__c, 'Debería estar penalizado');
     }
 
+    // 4.1
     @isTest
     static void testMissingFeeError() {
         // Crear vehículo con tipo inexistente en Custom Metadata
